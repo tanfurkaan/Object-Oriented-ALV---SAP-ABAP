@@ -1,0 +1,83 @@
+Top of page için önce splitter container yapısı kuracağız altlı üstlü sonra altta alvmiz olacak ve üstte ise top of page'imiz.
+
+1-) Top'da bölme datalarını kuruyoruz.
+
+DATA: go_splitter TYPE REF TO cl_gui_splitter_container,
+      go_sub1 TYPE REF TO cl_gui_container,
+      go_sub2 TYPE REF TO cl_gui_container.
+
+2-) Display_alv'ye gidip bölme işlemini yapıyoruz.
+
+CREATE OBJECT go_splitter
+
+parent= go_cust
+rows= 2
+columns = 1.
+
+CALL METHOD go_splitter->get_container
+
+row= 1
+column= 1
+container = go_sub1 (bu top_of_page olan).
+
+TEKRAR DİĞER ALV İÇİN YAZIYORUZ BU SEFER ROW= 2 VE ALV BASMAYI DA sub2 ile yapıyoruz.
+i_parent = go_sub2.
+
+3-) Topofpage olacak olan sub1'in boyunu ayarlamak için
+
+CALL METHOD go_spli->set_row_height
+row = 1 (çünkü top of page olan'ın row'u 1)
+height= 15 (gayet yeterli)
+
+4-) Şimdi yazılar için yine bir obje tanımlamamız lazım o yüzden yine Top'a gidiyoruz.
+
+DATA: go_docu TYPE REF TO cl_dd_document. (tamamen bunun üzerinden yönetim yapıyoruz yazılar için).
+
+5-) Yine alv yerine gidip create ediyoruz
+
+CREATE OBJECT go_docu (pbodaki yeri önemsiz).
+style = 'ALV_GIRD'
+
+ARTIK GENEL ALTYAPI KURULDU ŞİMDİ YAZILARA GEÇEBİLİRİZ.
+
+6-) Implemantation'a gidip methodumuzu yazmaya başlıyoruz.
+
+a- header
+
+DATA: lv_text TYPE sdydo_text_element.
+lv_text = (Yazmasını istediğimizi yaz).
+
+CALL METHOD go_docu->add_text yapıp
+ text= lv_text
+sap_style = cl_dd_document=>heading. (Başlık)
+
+b- ŞİMDİ ALT SATIRDA KULLANICI BİLGİLERİ
+
+CALL METHOD go_docu->new_line.
+CLEAR: lv_text.
+
+CONCATENATE 'User: ' sy-uname INTO lv_text SEPARATED BY space.
+CALL METHOD go_docu->add_text (yine eklemek için yazıyoruz)
+text= lv_text
+sap_color = cl_dd_document=>list_positive
+sap_fontsize = cl_dd_document=medium.
+
+c- ŞİMDİ BİR ALT SATIRDA DA TARİH
+
+CALL METHOD go_docu->new_line.
+CLEAR: lv_text.
+
+CONCATENATE 'Tarih : ' sy_datum INTO lv_text SEPARATED BY space.
+CALL METHOD go_docu->add_text
+text= lv_text (falan işte gerisini kendin yap.)
+
+d- ŞİMDİ DE SON DOKUNUŞ
+
+CALL METHOD go_docu->display_document
+parent = go_sub1. (nerde görünmesini istiyorsak onu yazacağız).
+
+7-) Şimdi de display_alv'nin en altına gidip.
+
+CALL METHOD go_alv->list_processing_events.
+i_event_name = 'TOP_OF_PAGE'.
+i_dyndoc_id = go_docu.

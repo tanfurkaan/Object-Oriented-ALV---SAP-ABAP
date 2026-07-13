@@ -1,0 +1,23 @@
+1-) TYPE'a gidip cell color için data oluşturuyoruz.
+
+cell_color TYPE lvc_t_scol, (table vermemizin sebebi her cell'in farklı farklı rengi olması ve sonu olmaması)
+
+2-) Table doldurmak için structure da oluşturmamız lazım
+
+DATA: gs_cell_color TYPE (table type'ın referans aldığı structure'ı yaz) lvc_s_scol.
+
+3-) Set_layout'a gidip 
+
+gs_layout-ctab_fname = 'CELL_COLOR'.
+
+4-) Get_data'da renklendirmeyi yap. (Line_Color için kullandığımız case'in içinde yazabiliriz)
+
+When 'EUR'.
+CLEAR: gs_cell_color.
+gs_cell_color-fname = 'URL' (hangi kolon)
+gs_cell_color-color-col = '3'. (Sarı)
+gs_cell_color-color-int = '1'. (Koyu)
+gs_cell_color-color-inv = '0'. (Font değişmesin)
+APPEND gs_cell_color to <gfs_scarr>-cell_color.
+
+*Aynı işlemleri başka şeyler içinde when kurup uzatabiliriz.

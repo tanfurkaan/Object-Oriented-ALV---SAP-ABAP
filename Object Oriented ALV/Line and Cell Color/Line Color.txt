@@ -1,0 +1,28 @@
+1-) Top'a gidip type'ların son kolonuna
+
+line_color TYPE char4 (example: C310).
+
+2-) sonra layouta gidip
+
+gs_layout-info_fname = 'LINE_COLOR'
+
+Altyapıyı kurduk bu şekilde.
+Şimdi de get_data kısmında çekerken değiştirmemiz laızm bunun için de bir fieldcatalog oluşturacağız.
+
+3-) Top'a gidip loop'da döndüreceğimiz fieldsymbolsü oluşturuyoruz
+FIELD-SYMBOLS: <gfs_scarr> TYPE gty_scarr.
+
+4-) get_data'ya gidip loop oluşturuyoruz
+
+LOOP AT gt_scarr ASSIGNING <gfs_scarr>.
+
+ENDLOOP
+
+5-) Loop içinde de case döndürüyoruz. Loop döndürmemizin sebebi her vereceğimiz değer için tekrar tekrar boyama yapamasını istememiz.
+
+CASE <gfs_scarr>-currcode.
+  WHEN 'USD'.
+    <gfs_scarr>-line_color = 'C710'.
+  WHEN 'EUR'.
+    <gfs_scarr>-line_color = 'C410'.
+ENDCASE.

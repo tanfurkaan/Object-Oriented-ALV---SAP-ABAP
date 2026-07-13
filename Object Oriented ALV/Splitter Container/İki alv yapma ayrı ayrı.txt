@@ -1,0 +1,45 @@
+Ekrana iki tane splitter kullanmadan alv basmak için.
+
+1-) Screen'de ikinci bir container oluştur ve CC_ALV2 de.
+
+2-) Top'a git ve ikinci alv için datalar oluştur.
+
+DATA: go_alv2 TYPE REF TO cl_gui_alv_grid,
+      go_cust2 TYPE REF TO cl_gui_custom_container.
+
+DATA: gt_sflight TYPE TABLE OF sflight,
+gt_fcat2 TYPE lvc_t_fcat.
+
+3-) Get_data'da sflight internal table'ı doldur.
+
+SELECT * FROM sflight 
+INTO CORRESPONDING FIELDS OF TABLE gt_sflight.
+
+4-) Fcat oluştur ikincisi için.
+
+CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
+ EXPORTING
+   I_STRUCTURE_NAME             = 'SFLIGHT'
+  CHANGING
+    ct_fieldcat = gt_fcat2.
+
+5-) Layout ortak.
+
+6-) ALV'yi basma yerinde ilk alv'nin aynı kodlarını bir kere daha yazıp sadece yeni değerleri veriyoruz.
+
+    CREATE OBJECT go_cust2
+      EXPORTING
+        container_name = 'CC_ALV2'.
+
+    CREATE OBJECT go_alv2
+      EXPORTING
+        i_parent = go_cust2.
+
+    CALL METHOD go_alv2->set_table_for_first_display
+      EXPORTING
+        is_layout       = gs_layout
+      CHANGING
+        it_outtab       = gt_sflight
+        it_fieldcatalog = gt_fcat2.
+
+    CALL METHOD go_alv->refresh_table_display.

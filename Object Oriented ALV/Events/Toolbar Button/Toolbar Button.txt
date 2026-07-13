@@ -1,0 +1,36 @@
+Set_layout'ta olan default toolbarı kapatmıştık no_toolbar = abap_true ile onu gizle.
+
+Önce handle_toolbar ile bir toolbar koyacağız sonra handle_user_command ile bastıktan sonra olanları yapacağız.
+
+1-) display alv'ye gidip toolbar'ı ve sonrasının handlerini oluştur.
+
+set HANDLER go_even_teceiver->handle_toolbar for go_alv
+set HANDLER go_even_teceiver->handle_user_command for go_alv
+
+2-) Class'a git ve önce toolbar yap.
+
+DATA: ls_toolbar TYPE stb_button.
+
+CLEAR: ls_toolbar.
+ls_toolbar-function = '&DEL'.
+ls_toolbar-text = 'Silme'.
+ls_toolbar-icon = (Icon tablosundan bir ikon seç) @11@
+ls_toolbar-quickinfo = (Mouse'la üstüne gidince ne yazsın?) 'Silme Islemi'
+ls_toolbar-disabled = (abap_true dersek ekranda gözükür ama basması gözükmez).
+append ls_toolbar INTO e_object->mt_toolbar. (böyle append ediyoruz)
+
+bir tane daha buton ekleyebilirsin mesela bu da display olsun.
+
+CLEAR: ls_toolbar.
+ls_toolbar-function '&DIS'
+ls_toolbar-text = 'Goruntule'
+... @10@
+tekrar append yap.
+
+3-) şimdi handle_user_command içinde
+
+CASE e_ucomm
+	WHEN '&DEL'.
+	WHEN '&DIS'.
+*whenlerin içini doldur.
+ENDCASE.

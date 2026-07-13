@@ -1,0 +1,74 @@
+Bir kolon ekleyip ona buton özelliği atayacağız. silme işlemi için.
+
+1-) Kolon ekleyeceğimiz için types olarak yazıyoruz kolonlarımızı.
+
+TYPES: BEGIN OF gty_scarr,
+(kolonlar ve data elementleri),
+delete TYPE char10
+END OF TYPES gty_scarr.
+
+DATA: gt_scarr TYPE TABLE OF gty_scarr. (referansı scarr tablosundan değil bizim gty_scarr'dan alsın ki buton koyacağımız şey de gözüksün).
+
+2-) Fieldcatalog'a bi tane structure oluşturup fazladan bi kolon ekeleyceğiz merge yapısındaydı.
+
+CLEAR: gs_fcat.
+gs_fcat-fieldname = 'DELETE'.
+gs_Fcat-scrtext_s = 'Sil'
+gs_Fcat-scrtext_m = 'Sil'
+gs_Fcat-scrtext_l = 'Sil'
+APPEND gs_fcat TO gt_fcat.
+
+3-) Buton özelliği kolon bazında işlem için fcatten yapmamız lazım.
+
+gs_fcat-style = cl_gui_Alv_grid=>mc_style_button.
+*şimdi bir buton eklemiş olduk.
+
+4-) Fieldsymbol oluşturuyoruz select attığımız yerde kullanmak için. Data değiştireceğiz o yüzden field-symbol.
+
+FIELD-SYMBOLS: <gfs_scarr> TYPE gty_scarr..
+
+5-) get_Data'ya git
+
+LOOP AT gt_Scarr ASSIGNING <gfs_scarr>.
+<gfs_scarr>-delete = 'Sil'.
+ENDLOOP
+
+*böylelikle her buton üstünde sil yazdı ve bunu değiştiebiliriz ikon atıyabiliriz.
+
+6-) gs_fcat-icon = abap_true. ekleyeceğiz fieldcatalog'a ikon özelliği açılacak ve icon tablosundan istediğimizi seçeceğiz.
+7-) get_data'da silme ikonu yapmak için 'Sil' yerine sil ikonunu yaz.
+
+8-) Şimdi bağlayacağız alv displayden.
+
+set HANDLER go_event_receiver->handle_button_click for go_alv.
+
+9-) Şimdi de classlara gidip ordan methodumuzun içine gerçekten satır silme yapacak olan bir kod yazıyoruz.
+
+  DATA: lv_answer TYPE char200.
+
+    READ TABLE gt_scarr INTO gs_scarr INDEX es_row_no-row_id.
+    IF sy-subrc = 0.
+      CASE es_col_id-fieldname.
+        WHEN 'DELETE'.
+
+          CALL FUNCTION 'POPUP_TO_CONFIRM'
+            EXPORTING
+              titlebar              = 'Satır Silme Onayı'
+              text_question         = 'Bu satiri silmek istiyor musunuz?'
+              text_button_1         = 'Evet'
+              text_button_2         = 'Hayir'
+              default_button        = '2'
+              popup_type            = 'ICON_MESSAGE_ERROR'
+              display_cancel_button = ''
+            IMPORTING
+              answer                = lv_answer.
+
+          IF lv_answer = '1'.
+            DELETE gt_scarr INDEX es_row_no-row_id.
+
+            CALL METHOD go_alv->refresh_table_display.
+            MESSAGE 'Satir silindi.' TYPE 'S'.
+          ENDIF.
+
+      ENDCASE.
+    ENDIF.

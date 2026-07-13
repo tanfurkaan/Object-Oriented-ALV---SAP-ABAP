@@ -1,0 +1,44 @@
+KOLON OLUŞTUR DATADA
+         cost       TYPE int4,
+FIELD CATALOĞUNU VER
+  CLEAR: gs_fcat.
+  gs_fcat-fieldname = 'COST'.
+  gs_fcat-scrtext_s = 'Fiyat'.
+  gs_fcat-scrtext_m = 'Fiyatlar'.
+  gs_fcat-scrtext_l = 'Fiyatlandırma'.
+  gs_fcat-edit      = abap_true.
+  APPEND gs_fcat TO gt_fcat.
+
+&SAVE gui status koy sonra bağla
+MODULE user_command_0100 INPUT.
+CASE sy-ucomm.
+  WHEN '&BACK'.
+    SET SCREEN 0.
+  WHEN '&SAVE'.
+    PERFORM get_total_sum.
+ENDCASE.
+ENDMODULE.
+
+FORM get_total_sum .
+DATA: lv_total_sum TYPE int4,
+      lv_total_sum_c TYPE char10,
+      lv_mess TYPE char200.
+
+LOOP AT gt_list INTO gs_list.
+lv_total_sum = lv_total_sum + gs_list-cost.
+ENDLOOP.
+
+lv_total_sum_c = lv_total_sum.
+
+CONCATENATE 'Girilen hesapların toplamı = '
+            lv_total_sum_c
+            INTO lv_mess.
+
+MESSAGE lv_mess TYPE 'I'.
+ENDFORM.
+
+SONRA DA BUNU YAZDIRMAK İÇİN METHOD OLUŞTUR.
+
+    CALL METHOD go_alv->register_edit_event
+      EXPORTING
+        i_event_id =   cl_gui_alv_grid=>mc_evt_modified.

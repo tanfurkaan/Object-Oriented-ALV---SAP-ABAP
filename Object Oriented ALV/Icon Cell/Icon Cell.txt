@@ -1,0 +1,57 @@
+Mesela ortalamanın üstündeyse başka bir ikon gözüksün falan gibi alvnin içinde.
+
+1-) İkon eklemek için önce Top'a gidip icon tanıtmamız lazım.
+
+TYPE-POOLS icon.
+
+2-) İkonların gözükeceği kolon ekleyeceğiz datalar'a
+
+durum type icon_d.
+
+3-) İkon tablosu var sap'de ICON diye. VEYA SE38 SHOWICON
+
+4-) Get_data ya gideceğiz
+
+LOOP AT gt_list ASSIGNING <gfs_list>.
+<gfs_list>-durum = 'koplayadığımız icon'
+ENDLOOP.
+
+5-) fieldcatalog'a ekle ve bitti.
+
+DİNAMİK YAPI OLUŞTURMA
+
+en son değerler verebiliyorduk fiyat kısmına ve ortalamanın üstünde ise o fiyat kırmızı eşitse sarı ve ortalamanın altındaysa yeşil verelim.
+
+1-) İconları bul
+
+2-) Form'daki get_total_sum'ı 0dan yazalım.
+
+DATA: lv_total_sum TYPE int4,
+      lv_lines TYPE int4,
+      lv_avg TYPE int4.
+
+
+LOOP AT gt_list INTO gs_list.
+lv_total_sum = lv_total_sum + gs_list-cost
+ENDLOOP.
+
+DESCRIBE TABLE gt_list LINES lv_lines.
+
+lv_avr = lv_total_sum / lv_lines.
+
+LOOP AT gt_list ASSIGNING <gfs_list>.
+IF <gfs_list>-cost > lv_avr.
+<gfs_list>-durum = '@2C@'.
+ELSEIF <gfs_list>-cost < lv_avr.
+<gfs_list>-durum = '@23@'.
+ELSE.
+<gfs_list>-durum = '@1G@'.
+ENDIF.
+ENDLOOP.
+
+
+3-) Bu değişiklikleri alvde göstermek için alv'yi çağırdığımız yere gidip method çağıracağız. Ordaki if'in içine yazmayacağız çünkü tüm alvyi sıfırdan çağırmayacağız sadece refresh atacağız.
+
+ELSE
+CALL METHOD go_alv->refresh_table_display.
+ENDIF.

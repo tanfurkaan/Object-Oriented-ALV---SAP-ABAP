@@ -1,0 +1,27 @@
+iki tabloyu bağlayıp yapacaksan bu şekilde olması lazım
+
+TYPES: BEGIN OF gty_list,
+         carrid     TYPE s_carr_id,
+         carrname   TYPE s_carrname,
+         currcode   TYPE s_currcode,
+         url        TYPE s_carrurl,
+         paymentsum TYPE s_sum,
+                      END OF gty_list.
+DATA: gt_list TYPE TABLE OF gty_list.
+
+*Paymentsum sflight tablosundan geliyor.
+*Şirketlerin ortak kazancını görmek için TYPE'ları böyle verdim select atarken de tek tek yazacağız.
+
+ SELECT scarr~carrid
+   scarr~carrname
+   scarr~currcode
+   scarr~url
+   SUM( sflight~paymentsum ) AS PAYMENTSUM
+   INTO CORRESPONDING FIELDS OF TABLE gt_list
+   FROM scarr
+   LEFT JOIN sflight ON sflight~carrid EQ scarr~carrid
+   GROUP BY scarr~carrid scarr~carrname scarr~currcode scarr~url.
+
+*gt_list'e atmak için into corresponding fields of table kullandım.
+*left join atma sebebim kazanç yapmamış şirketleri de görmek.
+*group by da sum atmadığım tüm verileri yazmam lazım.

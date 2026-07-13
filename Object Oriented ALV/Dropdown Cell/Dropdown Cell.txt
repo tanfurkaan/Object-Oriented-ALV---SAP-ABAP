@@ -1,0 +1,38 @@
+1-)işlem aynı yine kolon eklemek için data oluşturup fieldcatalogda gösteriyoruz.
+
+location TYPE char20,
+
+2-) fieldcatalog
+
+CLEAR: gs_fcat..
+gs_fcat-fieldname = 'LOCATION'.
+.... buraları doldur
+gs_fcat-edit = abap_true (olması lazım ki seçim yaparken editleyebilelim)
+gs_fcat-drdn_hndl = 1. (dropdown kutusunun idsi. Bu id içine yani 1. grubun içine değerler vereceğiz.
+
+3-) display_alv kısmında girdiyi vermemiz lazım.
+
+display yapmadan hemen çağırmak  istyoruz o yüzden display alv'nin üsstüne yazıyoruz hemen
+
+PERFORM set_dropdown.
+
+4-) form'a gidip.
+
+DATA: lt_dropdown TYPE LVC_T_DROP,
+ls_dropdown TYPE lvc_s_drop.
+
+CLEAR: ls_dropdown.
+ls_dropdown-handle = 1 (fieldcatalogdaki id'yi ver)
+ls_dropdown-value = 'Yurtiçi' (seçim değerleri)
+append LS_DROPDOWN to lt_dropdown.
+
+(her biri için ayrı ayrı yazıyoruz.
+
+CLEAR: ls_dropdown.
+ls_dropdown-handle = (fieldcatalogdaki id'yi ver)
+ls_dropdown-value = 'Yurtdışı.' (seçim değerleri)
+append LS_DROPDOWN to lt_dropdown.
+
+go_alv->set_drop_down_table diye grid çağırıyoruz işte.
+
+it_dropdown = lt_dropdown verip kaydet.

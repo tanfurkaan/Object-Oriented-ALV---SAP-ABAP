@@ -1,0 +1,55 @@
+Variant rapor üzerinden değil ama selection screen üzerinden gelir.
+Şimdi yapacağımız ekrana bir parametre koyup onu seçtirip onun üzerinden gridi çalıştırmak olacak yani kullanıcı hangi varyantı görmek istediğini seçecek.
+
+1-) Top'a gidip parametre açacağız
+
+PARAMETERS: p_vari TYPE disvariant-variant.
+
+*Şimdi böyle çalıştırırsak direkt ekrana parametre geldi ve oraya yazılı seçeceğiz ama şimdi bağlamamız lazım yapılan seçimden etkilenmesi için.
+
+2-) ALV çağırma formunda alv gelmeden
+
+gs_variant-variant= p_vari (variant'ı alv'ye bağladık is_variant'ı gs_Variant yapmıştık başta.)
+
+*YAZI YERİNE DAHA GÜZEL GÖZÜKMESİ İÇİN
+
+3-) Includeların olduğu ana programa gidip Includelardan hemen sonra
+
+INITIALIZATION.
+
+4-) Sonra function çağıracağız.
+
+LVC_VARIANT_DEFAULT_GET
+
+5-) I_SAVE bir alan istiyor oraya A vereceğiz ve cs_variant bir variant parametresi istiyor
+
+gs_variant_tmp TYPE disvariant. (geçici gibi dedik çünkü default varyant varsa kullanacağız)
+
+6-) Functiondan hemen önce gs_variant_tmp-report = sy-repid.
+
+7-) cs_variant = gs_variant_tmp
+
+sonra en aşağıda da 
+IF sy_subrc eq 0.
+p_vari = gs_variant_tmp_variant.
+ENDIF.
+
+
+*ŞİMDİ EKRANIMIZA BİZİM YAPTIĞIMIZ ÖN AYARLARDAN DEFAULT OALRAK SEÇİLİ OLAN YAZILI OLARAK GELDİ.
+Ama bir sürü parametre varsa biz buna bir search help koymamız lazım.
+
+
+
+8-) INITIALIZATIONSDAN sonra 
+
+AT SELECTION-SCREEN on VALUE-REQUEST FOR p_vari
+
+9-) Yine function çağıracağız LVC_VARIANT_F4
+
+is_variant = gs_variant_tmp
+I_SAVE = 'A'
+es_variant= gs_variant_tmp
+
+IF sy_subrc eq 0.
+p_vari = gs_variant_tmp_variant. (Bunun anlamı bir seçim yapıldıysa benim p_vari alanımı seçili olanla değiştir diyorum)
+ENDIF.

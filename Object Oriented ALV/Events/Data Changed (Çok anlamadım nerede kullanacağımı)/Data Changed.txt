@@ -1,0 +1,46 @@
+Alv içine data değiştirince o datayı yakalamak için kullanılıyor.
+
+1-) Field symbol oluştur field catalog için
+<gfs_fcat> TYPE lvc_s_fcat.
+
+2-) set_fcat'e git
+
+LOOP AT  gt_fcat ASSIGNING <gfs_fcat>.
+IF <gfs_fcat>->fieldname EQ 'CARRNAME'.
+<gfs_fcat>-edit = abap_true.
+ENDIF.
+ENDLOOP.
+
+*Şuan edit özelliği açık ama yapılan değişikliği yakalamak için handle_data_changed yapısını kullanacağız.
+
+3-) Set handler oluştur.
+
+SET HANDLER go_event_receiver->handle_data_changed for go_alv.
+
+4-) alv display'inden sonra
+
+CALL METHOD go_alv->register_edit_Event yazıp aç
+
+i_event_id = cl_gui_alv_grid=>mc_evt_modified (bu çıkınca yakalar enter ise enter'a basınca)
+
+*şimdi editleme ve yakalama özelliği açık ve yakalamayı kodlayacağız
+
+5-) method'a git (eski ve yeni değerleri yakalamayı yapacağız)
+DATA: ls_modi TYPE LVC_S_MODI (mt_good_cells'in table'ının structeri),
+      lv_mess TYPE char200.
+
+
+LOOP AT er_data_changed->mt_good_cells INTO ls_modi.
+READ TABLE gt_scarr INTO gs_scarr INDEX ls_modi-row_id.
+
+IF sy_subrc EQ 0.
+CONCATENATE ls_modi-fieldname
+            '=> eski deger'
+            gs_scarr-carrname
+	    ', yeni deger'
+	    ls_modi-value
+	    INTO lv_mess
+		SEPARATED BY SPACE.
+MESSAGE lv_mess TYPE 'I'.
+ENDIF.
+ENDLOOP.

@@ -1,0 +1,10 @@
+*&---------------------------------------------------------------------*
+*& Include          ZFTK_EGT_0024_TOP
+*&---------------------------------------------------------------------*+
+DATA: go_alv TYPE REF TO cl_gui_alv_grid,
+      go_cust TYPE REF TO cl_gui_custom_container.
+
+DATA: gt_scarr TYPE TABLE OF scarr,
+      gt_fcat TYPE lvc_t_fcat,
+      gs_fcat TYPE LVC_S_FCAT,
+      gs_layout TYPE lvc_s_layo.

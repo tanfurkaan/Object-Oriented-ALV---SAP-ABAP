@@ -1,0 +1,25 @@
+2. SORT (Verileri Otomatik Sıralı Getirme)
+Ekrana veri geldiğinde kullanıcının kolona tıklayıp sıralamasına gerek kalmadan, program açıldığı an senin belirlediğin kolona göre A'dan Z'ye veya Z'den A'ya sıralı gelsin istiyorsan bunu kullanırsın.
+
+Tanımlama:
+
+
+DATA: gt_sort TYPE lvc_t_sort,
+      gs_sort TYPE lvc_s_sort.
+
+2-) Alv'ye gidip it_sort alanını aç ve gt_sort yaz.
+3-) alv'den önce PERFORM set_sort yaz ve orda ayarlamalarını yap.
+
+CLEAR gs_sort.
+gs_sort-spos      = 1.         "Sıralama önceliği (1. sırada bu kolona göre sırala)
+gs_sort-fieldname = 'CARRID'.  "Hangi kolona göre sıralanacak?
+gs_sort-up        = 'X'.       "A'dan Z'ye (Küçükten büyüğe) sırala
+* gs_sort-down    = 'X'.       "Eğer Z'den A'ya isteseydik bunu X yapardık
+APPEND gs_sort TO gt_sort.
+
+* İstersen 2. bir sıralama daha ekleyebilirsin:
+CLEAR gs_sort.
+gs_sort-spos      = 2.
+gs_sort-fieldname = 'PRICE'.
+gs_sort-down      = 'X'.       "Fiyatı yüksek olan en üstte gelsin
+APPEND gs_sort TO gt_sort.

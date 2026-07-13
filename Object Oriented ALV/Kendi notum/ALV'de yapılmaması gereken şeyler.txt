@@ -1,0 +1,43 @@
+*	Sık Yapılan Hatalar
+ALV raporu geliştirirken sadece veriyi ekrana getirmek yeterli değildir. Raporun performanslı, okunabilir ve kullanıcı ihtiyacına uygun olması da önemlidir.
+
+Bu kısmı ilk etapta tam olarak anlamamış olabilirsiniz. Ancak ilerleyen süreçte ALV raporlarında performans problemleriyle karşılaşırsanız,vermiş ilk 6 maddeyi kontrol etmeniz gerekir.
+
+*	SELECT * ile Veri Çekmek
+Tablodaki tüm alanları çekmek yerine sadece ihtiyaç duyulan alanlar okunmalıdır. Gereksiz alanlar hem performansı düşürür hem de raporun bakımını zorlaştırır.
+
+*	LOOP İçerisinde SELECT SINGLE Kullanmak
+Döngü içinde sürekli veritabanına gitmek, özellikle kayıt sayısı arttığında raporun ciddi şekilde yavaşlamasına neden olabilir.
+
+*	Yeterli Filtre Kullanmamak
+Büyük SAP tablolarında filtre kullanmadan veri çekmek performans sorunlarına yol açar. Seçim ekranında şirket kodu, tarih, belge numarası, müşteri, satıcı veya organizasyon gibi filtreler kullanılmalıdır.
+
+*	Tarih Aralığı Vermemek
+Özellikle belge tablolarında tarih filtresi önemlidir. Tarih aralığı olmadan yapılan sorgular çok fazla kayıt getirebilir.
+
+*	Gereksiz Fazla Alanı ALV’ye Eklemek
+Kullanıcının ihtiyaç duymadığı alanları rapora eklemek, ALV ekranını karmaşık hale getirir. Rapor mümkün olduğunca sade ve amaca uygun olmalıdır.
+
+*	Internal Table İşlemlerini Doğru Yönetmemek
+Büyük veri setlerinde internal table okuma, sıralama ve eşleştirme işlemleri dikkatli yapılmalıdır. Yanlış internal table kullanımı raporun yavaş çalışmasına neden olabilir.
+
+*	ALV Kolon Başlıklarını Düzenlememek
+Teknik alan adları son kullanıcı için her zaman anlaşılır olmayabilir. Bu nedenle kolon başlıkları kullanıcı dostu olacak şekilde düzenlenmelidir.
+
+*	Para Birimi ve Miktar Alanlarını Eksik Göstermek
+Tutar alanlarının yanında para birimi, miktar alanlarının yanında ise ölçü birimi gösterilmelidir. Aksi halde kullanıcı için eksik veya yanlış yorumlanabilecek bilgiler oluşabilir.
+
+*	Boş Veri Kontrolü Yapmamak
+Seçim kriterlerine uygun veri bulunamadığında kullanıcıya bilgi verilmelidir. Aksi halde boş ALV ekranı kullanıcıda raporun hatalı çalıştığı izlenimi oluşturabilir.
+
+*	Yetki Kontrollerini Göz Ardı Etmek
+Bazı raporlarda kullanıcıların her veriyi görmemesi gerekebilir. Şirket kodu, satış organizasyonu veya depo gibi alanlarda yetki kontrolü gerekebilir.
+
+*	ALV Layout Kullanımını Düşünmemek
+Kullanıcılar kolon sıralamasını, filtrelerini veya görünüm düzenini kaydetmek isteyebilir. Layout desteği kullanıcı deneyimi açısından önemlidir.
+
+*	Performansı Gerçek Veriyle Test Etmemek
+Rapor az veriyle hızlı çalışabilir. Ancak canlı sistemde daha büyük veriyle çalıştığında yavaşlayabilir. Bu yüzden rapor gerçekçi veri hacmiyle test edilmelidir.
+
+*	Kodun Okunabilirliğine Dikkat Etmemek
+Rapor çalışıyor olsa bile kodun okunabilir, düzenli ve bakımı kolay olması gerekir. Büyük raporlarda veri okuma, veri hazırlama ve ALV gösterme işlemleri ayrı bölümlerde yönetilmelidir.

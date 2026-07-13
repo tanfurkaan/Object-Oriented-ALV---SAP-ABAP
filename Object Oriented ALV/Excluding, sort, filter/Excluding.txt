@@ -1,0 +1,25 @@
+1. EXCLUDING (İstenmeyen Standart Butonları Yok Etme) 🚫
+ALV'nin tepesinde bir sürü standart buton gelir (Detay, Toplam al, vs.). Bunların bazıları kullanıcının kafasını karıştırır, gizlemen gerekir.
+
+Bunun için UI_FUNCTIONS tipinde bir tablo oluşturup, gizlemek istediğimiz butonların kodlarını (Attribute) içine atarız.
+
+Tanımlama:
+
+DATA: gt_exclude TYPE ui_functions,
+      gv_exclude TYPE ui_func.
+
+2-) Alv'ye git ve it_toolbar_excluding'i aç gt_excluding yaz.
+3-) alv'den önce PERFORM set_excluding yaz ve form'un içinde gizleme detaylarını yap.
+
+
+* Hangi butonu gizleyeceksek tablosuna ekliyoruz.
+* cl_gui_alv_grid sınıfının içinde mc_fc ile başlayan hepsi standart butonlardır.
+
+gs_exclude = cl_gui_alv_grid=>mc_fc_detail. "Detay butonunu gizle
+APPEND gv_exclude TO gt_exclude.
+
+gs_exclude = cl_gui_alv_grid=>mc_fc_print.  "Yazdır butonunu gizle
+APPEND gv_exclude TO gt_exclude.
+
+gs_exclude = cl_gui_alv_grid=>mc_fc_info.   "Bilgi (Hakkında) butonunu gizle
+APPEND gv_exclude TO gt_exclude.

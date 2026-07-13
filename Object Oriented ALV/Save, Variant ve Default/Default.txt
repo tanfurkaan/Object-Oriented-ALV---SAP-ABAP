@@ -1,0 +1,5 @@
+Default için ön ayarla modunu açıp kapatıp açmaya yarayan yapı.
+
+i_default = 'X' ise gidip getirecek ön ayarı ama boşluk yaparsam ve dışardan verilen bir variant yapısı yoksa ben ne seçersem seçeyim ön ayarlı duran variant seçili olarak gelecek.
+
+X yerine boşluk verirsek ön ayarlı tanımlı olan bir variant gelmeyecek ve default olarak gelecek alvmiz ekrana bizim kendimizin seçmemiz gerekecek.

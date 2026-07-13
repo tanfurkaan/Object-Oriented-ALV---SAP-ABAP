@@ -1,0 +1,114 @@
+Search help ekleyip içini dolduracağız sonra alv içinde kolonda seçim yapacağız.
+
+1-) bir kaç kolon datası değişeceği için field symbol oluştur
+
+FIELD-SYMBOLS: <gfs_fcat> TYPE lvc_s_fcat.
+
+2-) set_fcat
+
+LOOP AT gt_fcat ASSIGNING <gfs_fcat>.
+IF <gfs_fcat>-fieldname eq 'CARRRNAME'.
+<gfs_fcat>-edit = abap_ture.
+<gfs_fcat>-f4availab1 = abap_true.
+ENDIF.
+ENDLOOP.
+
+*BUNU style ile de yapabiliriz. f4availab1 yerine.
+
+<gfs_fcat>-style = cl_gui_alv_grid=>mc_style_f4.
+
+Bunun kullanılabilir hale geçmesi için alv çağırdığımız yere gidip PERFORM oluşturoyurz.
+
+PERFORM register_f4.
+
+Form'un içine oluştur.
+
+
+3-) register_f4 formunda
+
+DATA: lt_f4 TYPE LVC_T_F4,
+	ls_f4 TYPE LVC_S_F4.
+
+CLEAR: ls_f4.
+ls_f4-fieldname = (hangi kolona eklemek isityorsak.
+ls_f4-register = abap_true.
+APPEND ls_f4 to lt_f4.
+
+CALL METHOD go_grid->register_f4_for_fields
+it_f4 = lt_f4.
+
+4-) set handler oluştur alvde.
+
+set HANDLER go_event_receiver->hanfle_onf4 FOR go_alv.
+
+5-)Şimdi classlara gidip kdolamasını yazıyoruz.
+
+fonksiyon çağıracağız.
+
+F4IF_INT_TABLE_VALUE_REQUEST.
+
+retfield = (Hangi kolonsa)
+window_title = (Ne yazsın popupda)
+
+return_tab ve value_tab için önce bir data oluştur.
+
+
+TYPES: BEGIN OF lty_value_tab,
+carrname TYPE s_carrname,
+END OF lty_value_tab.
+
+DATA: lt_value_tab TYPE TABLE OF lty_value_tab
+	ls_value_tab TYPE lty_value_tab.
+
+DATA: lt_return_tab TYPE TABLE OF DDSHRETVAL,
+	ls_return_tab TYPE ddshretval.
+
+value_tab = lt_value_tab.
+return_tab =lt_return_tab.
+
+
+yukarda da bu structureleri doldur.
+
+CLEAR: ls_value_tab.
+ls-value_tab-carrname = 'Ucus 1'.
+APPEND ls_value_tab TO lt_value_tab.
+
+bunun gibi kaç tane yapmak istiyorsak seçimi.
+ÖRNEK
+CLEAR: ls_value_tab.
+ls-value_tab-carrname = 'Ucus 2'.
+APPEND ls_value_tab TO lt_value_tab.
+CLEAR: ls_value_tab.
+ls-value_tab-carrname = 'Ucus 3'.
+APPEND ls_value_tab TO lt_value_tab.
+
+
+
+
+en sona da
+
+READ TABLE lt_return_tab INTO ls_return_tab WITH KEY fieldname = 'F0001'.
+IF sy_subrc eq 0.
+READ TABLE gt_scarr ASSIGNING <gfs_scarr> INDEX es_row_no-row_id.
+IF sy_subrc eq 0.
+<gfs_scarr>-carrname= ls_return_tab-fieldval.
+
+GO_ALV->refresh_table_display.
+
+ENDIF.
+ENDIF.
+
+
+er_event_data->m_event_handled = 'X'.
+
+
+bir tane daha kolon eklemek için types'da
+
+carrdeff TYPE char20,
+CLEAR: ls_value_tab.
+ls-value_tab-carrname = 'Ucus 1'.
+ls_value_tab-carrdeff = 'Birinci Ucus'
+APPEND ls_value_tab TO lt_value_tab.
+
+
+eğer retfield'a carrdeff i verseydik orayı referans alacaktı yani iki kolonlu da olsa referans aldığı kolonu kullancak.

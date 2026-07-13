@@ -1,0 +1,24 @@
+3. FILTER (Verileri Otomatik Filtreli Getirme) 🔍
+Diyelim ki tablonda binlerce satır var ama sen ekran açıldığında ALV'de SADECE 'THY' uçuşları görünsün istiyorsun. Geri kalan veriler arkada durur ama ekranda filtrelenmiş gelir.
+
+Tanımlama:
+
+ABAP
+DATA: gt_filter TYPE lvc_t_filt,
+      gs_filter TYPE lvc_s_filt.
+Kullanım:
+
+ALV'DE
+it_filter                     = gt_filter.
+
+ALV ÖNCESİ
+PERFORM set_filter.
+
+
+CLEAR gs_filter.
+gs_filter-tabname = 'GT_SCARR'.
+gs_filter-fieldname = 'CURRCODE'. "Hangi kolona filtre atılacak?
+gs_filter-sign      = 'I'.      "I = Include (Dahil et), E = Exclude (Bunu hariç tut)
+gs_filter-option    = 'EQ'.     "EQ = Eşittir (BT: Arasında, CP: İçerir)
+gs_filter-low       = 'USD'.    "Neye eşit olsun?
+APPEND gs_filter TO gt_filter.

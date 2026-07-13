@@ -1,0 +1,58 @@
+OO ALV classlar üzerine kurulu bir düzen o yüzden önce obje oluşturuyoruz.
+
+1-) TOP'a gidip object datası oluştur.
+DATA: go_alv TYPE REF TO cl_gui_alv_grid. (bu class'a ait obje oluşturdur).
+
+pbo'ya gidip PERFORM display_alv yaz.
+
+2-) Bu objeyi kullanmak için create edeceğiz ana programda ama bu işlemi de ekran gelmeden yapmamız lazım yani CALL SCREEN 0100'den önceye yazacağım.
+
+create OBJECT go_alv (ctrl+space).
+
+3-) i_parent hariç hepsini sil.
+i_parent'e değer verirken hangi container şeklinde basacağımı göstereceğiz. OO ALV'de container mantığı var.
+Layout'da custom control butonunda bir container alanı oluşuyor ve buna bir id veriyoruz. (CC_ALV).
+
+4-) i_parent = 'CC_ALV' yapamıyoruz bir obje istiyor ve tekrar Top'a gidiyoruz ve container objesi oluşturuyoruz.
+go_cont TYPE REF TO cl_gui_custom_container.
+
+5-) bunu da create ediyoruz ana programda (go_alv'nin üstüne yaz).
+create object go_cont (ctrl+space).
+
+4-) container_name dışındakileri sil
+5-) SCREEN'e vermiş olduğumuz container id'sini direkt eşliyoruz buna.
+container_name = 'CC_ALV'.
+6-) go_alv'ye gidip 
+i_parent = go_cont.
+
+Şimdi biz önce bir container oluşturduk ''CC_ALV'', sonra onu objeleştirdik "go_cont" ile sonra da obje isteyen i_parent'e yazdık container objemizi.
+
+7-) Şimdi ekrana basma zamanı.
+
+call METHOD go_alv->
+bizim display edecek methodumuz "set_table_for_first_display" diye geçiyor.
+
+REUSE ALV'ye benzer şekilde kodlar gelecek.
+
+8-) i_structure_name = (ekrana basmak istediğim alv'nin type'ını soruyor yani o type'da bir structure istiyor. 'SCARR' kullanacağız biz.
+
+9-) it_outtab de bizden bir internal table istiyor şimdi de internal table oluşturuyoruz top'da.
+
+DATA: gt_scarr TYPE TABLE OF scarr.
+
+10-) START-OF-SELECTIONDAN hemen sonra selectini çekip interna table'a çektiriyorum.
+
+SELECT * FROM scarr
+INTO TABLE gt_scarr.
+
+11-) bu internal table'ı da it_outtab'e yazıyorum. Ekrana basmasını istediğim interna table'ı yazdım yani.
+
+Şimdiki sorunumuz OO ALV screen mantığı ile çalışıyor yani SCREEN'in içine yazmamız lazım bunları, PBO'ya yazacağız ALV ekrana gelmeden hazır olması lazım bunların. Select dışında objelerimi pbo'ya yapıştırıyorum.
+
+12-) Yapıştırırken de bunların OBJECT ORIENTED kodlama mantığı ile yaklaşmamız için perform oluşturuyoruz. 
+PERFORM DISPLAY_ALV.
+
+Performu da _FRM ile oluşturduğum include programının içinde yazıyorum.
+SELECT için de aynısını yapıp selectin olduğu yerde PERFORM get_data oluşturuyorum ve selecti de _FRM include programının içine yazıyorum.
+
+*En basit bir OO ALV oluşturduk buraya kadar.

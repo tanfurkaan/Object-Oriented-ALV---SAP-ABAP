@@ -1,0 +1,24 @@
+Varyantımızı user mode mu yoksa default mode'mu kullanmamıza yarıyor.
+
+I_SAVE = ' ' --> Display Variants cannot be saved
+I_SAVE = 'X' --> Standard save mode
+I_SAVE = 'U' --> User_specific save mode
+I_SAVE = 'A' --> Standard and user-specific save mode
+
+1-) Alv'nin içindeki i_save'e istediğimizi vereceğiz mesela ilk olarak X verelim ve çalıştıralım.
+
+*Yukardaki buton gelmeyecek çünkü reusealvde direkt çağırılıyorken biz varyant parametresi olarak vermemiz lazım.
+
+Grid methoduna çift tıklayıp varyantın parametresini alacağız ve Top'a gidip
+
+DATA: gs_variant TYPE disvariant.
+
+is_variant = gs_variant yazacağız sonra da alv'yi çağırmanın öncesine
+
+gs_variant-report = sy-repid.
+
+*Şimdi istediğimiz butonumuz geldi ve düzen seç, değiştir ve sakla ayarlayabileceğiz.
+*X yerine U yapıp çalıştırırsak ve düzeni sakla diyince kullanıcıya özgü açık kaldı veya onu A yaparsak biz kendimiz belirleyeceğiz kullanıcıya özgü olup olmadığını.
+
+Mesela düzeni sakla dedik ve varyantı (düzeni) sakla yaptık.
+Şimdi otomatik olarak varyant seçimini yapacağız ön ayarla yapıp.

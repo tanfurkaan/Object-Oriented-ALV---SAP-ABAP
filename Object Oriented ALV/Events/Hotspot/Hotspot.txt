@@ -1,0 +1,49 @@
+fieldcatalog üzerinde oynama yapıyoruz gt_fcat üzerinde hotspot özelliğini açmak için.
+
+1-) Top'a gidip bi fieldsymbol oluşturuyoruz.
+
+FIELD-SYMBOLS: <gfs_fcat> TYPE lvc_s_fcat.
+
+
+2-) Şimdi field catalog'da oynamaya geçiyoruz.
+
+
+LOOP AT gt_fcat ASSIGNING <gfs_fcat>
+	IF <gfs_fcat>-fieldname EQ 'CARRID'
+	<gfs_fcat>-hotspot = abap_true.
+	ENDIF
+ENDLOOP.
+
+*Şimdi tıklanabilir yapısını tanımladık ama işlemi yakalamak için de event kısmında kodlama yapmamız lazım.
+
+3-) Display_alv'ye gidip set handler yapıyoruz ki yakalama işlemi tam olarak çalışsın.
+
+SET HANDLER go_event_receiver->handle_hotspot_click for go_alv
+
+4-) şimdi kodlama kısmı. Mesaj yazmasını istiyoruz en çok kullanılan yapı bu.
+
+DATA: lv_mess TYPE char200.
+
+READ TABLE gt_scarr INTO gs_scarr INDEX (row id'nin içinde satır olarak dönüyor) e_row_id-index.
+
+IF sy-subrc eq 0. (bunu yapmamın sebebi database seviyesinde işlem olduğu için koyuyorum)
+CASE e_column_id-fieldname.
+	WHEN 'CARRID'.
+	CONCATENATE 'Tıklanan kolon'
+		    e_column_id-fieldname
+		    'degeri'
+		    gs_scarr-carrid
+		    INTO lv_mess
+		    SEPARATED BY space.
+MESSAGE lv_mess TYPE 'I'.
+ENDCASE.
+ENDIF.
+
+
+
+BAŞKA KOLONLAR İÇİN DE YAPMAK İSTİYORSAK.
+
+(2. adımda carrid'den sonra or ekleyip aynı kodu eq'dan sonra hangi kolonda olmasını istiyorsak öyle yazıyoruz örnek 	<gfs_fcat>-fieldname EQ 'CARRID' OR 
+	<gfs_fcat>-fieldname EQ 'CARRNAME'.
+
+sonra 4. adımda when ekliyoruz ve CARRNAME için olan kodları aynı şekilde yazıyoruz carrid olan kısımı carrname'e uydurarak.

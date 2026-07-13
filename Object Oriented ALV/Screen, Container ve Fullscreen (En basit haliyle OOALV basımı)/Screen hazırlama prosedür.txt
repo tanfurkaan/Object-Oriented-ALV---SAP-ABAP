@@ -1,0 +1,24 @@
+1-) Önce düzenlemek için Include yapılarımızı oluşturuyoruz.
+Screen yapısında kullandığımız için pbo ve pai için de oluşturuyoruz.
+
+INCLUDE top
+INCLUDE pbo
+INCLUDE pai
+INCLUDE form
+
+START-OF-SELECTION.
+
+2-) Sonra ana ekranda screen oluşturuyoruz normal şekilde.
+PAI ve PBO'yu include programlarının içine oluşturuyoruz.
+
+3-) GUI Status ve GUI Titles oluştur.
+4-) PBO'da eşleştir PF-STATUS ve TITLEBAR'ı.
+
+5-) PAI'ye gidip sy-ucomm ile butona ata.
+CASE sy-ucomm.
+WHEN '&BACK'.
+SET SCREEN 0.
+ENDCASE.
+
+6-) start-of-selectiondan sonra ekranı çağır
+CALL SCREEN 0100.

@@ -1,0 +1,28 @@
+1-) Her şeyden önce kullanacağım bir include oluşturuyoruz. Eventleri classlar içinde kullanıyoruz o yüzden önce class definition ve implementation oluşturmamız lazım.
+
+INCLUDE _cls (class).
+
+2-) İçine girip
+
+CLASS cl_event_receiever DEFINITION.
+
+ENDCLASS.
+
+CLASS cl_event_receiever IMPLEMENTATION.
+
+ENDCLASS.
+
+3-) 5-6 tane method var ve hepsini tek tek yazmamız lazım. Altyapı için hazır kodları kopyalıyoruz.
+Hazır kodlar txt'sinde yazıyor. Implementation'un içi değişecek bunlar sadece altyapıyı gösteriyor.
+
+4-) Bu class objesini referans alan bi data tanımlaması yapıyoruz.
+
+DATA: go_event_receiever TYPE REF TO cl_event_receiver
+
+(Bazen cls'leri top'ın altına koyacağımız durumlar oluyor o yüzden bu koda ek yapmamız lazım bu class sonradan tanımlanacak error verme diye.)
+CLASS cl_event_receiver DEFINITION DEFERRED.
+
+5-) ALV'yi çağırmadan önce de bu class'ın objesini oluşturup alttaki yapıyı yazıyoruz.
+
+CREATE OBJECT go_event_receiver.
+set HANDLER go_event_receiver-> (sonra da kullanmak istediğimiz method) FOR go_alv.

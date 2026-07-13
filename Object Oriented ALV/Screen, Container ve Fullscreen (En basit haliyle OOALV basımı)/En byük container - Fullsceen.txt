@@ -1,0 +1,9 @@
+Tek bir ALV yapacağımız için FULLSCREEN nasıl basacağız containersız.
+
+Container ile ilgili olanların hepsini gizleyip
+ i_parent yerine de cl_gui_container=>screen0 yazıyoruz.
+
+Basabildiği en büyük şekilde ALV'yi basıyor.
+Birden fazla ALV ile uğraşacaksak Container mantığı lazım eğer yoksa screen'de container kullanmaya da gerek yok.
+
+Ama sadece bunu değil üstüne altına butonlar koymalarını isteyecekler o yüzden container'ı kullan.

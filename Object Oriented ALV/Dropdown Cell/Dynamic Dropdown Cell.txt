@@ -1,0 +1,62 @@
+1-) Dinamikleştirmek için (sınıfa göre ayrı pozisyon seçme)
+ 
+       seatp      TYPE char10,
+         dd_handle  TYPE int4,
+
+2-) FİELDCATALOG
+    
+  CLEAR: gs_fcat.
+  gs_fcat-fieldname = 'SEATP'.
+  gs_fcat-scrtext_s = 'Koltuk P.'.
+  gs_fcat-scrtext_m = 'Koltuk Pozisyon'.
+  gs_fcat-scrtext_l = 'Koltuk Pozisyon'.
+  gs_fcat-edit      = abap_true.
+  gs_fcat-drdn_field = 'DD_HANDLE'.
+  APPEND gs_fcat TO gt_fcat.
+  
+
+3-) set_dropdownda
+
+      CLEAR: ls_dropdown.
+  ls_dropdown-handle = 3.
+  ls_dropdown-value = 'Ön'.
+  APPEND ls_dropdown TO lt_dropdown.
+
+      CLEAR: ls_dropdown.
+  ls_dropdown-handle = 3.
+  ls_dropdown-value = 'Kanat'.
+  APPEND ls_dropdown TO lt_dropdown.
+
+      CLEAR: ls_dropdown.
+  ls_dropdown-handle = 3.
+  ls_dropdown-value = 'Arka'.
+  APPEND ls_dropdown TO lt_dropdown.
+
+      CLEAR: ls_dropdown.
+  ls_dropdown-handle = 4.
+  ls_dropdown-value = 'Ön'.
+  APPEND ls_dropdown TO lt_dropdown.
+
+      CLEAR: ls_dropdown.
+  ls_dropdown-handle = 4.
+  ls_dropdown-value = 'Arka'.
+  APPEND ls_dropdown TO lt_dropdown.
+
+      CLEAR: ls_dropdown.
+  ls_dropdown-handle = 5.
+  ls_dropdown-value = 'Kanat'.
+  APPEND ls_dropdown TO lt_dropdown.
+
+
+4-) Get_dataya gidip data alınırken loop atıyoruz ve teker teker assign ediyor datalara verileri.
+
+LOOP AT gt_list ASSIGNING <gfs_scarr>.
+CASE <gfs_scarr>-currcode.
+  WHEN 'EUR'.
+    <gfs_scarr>-dd_handle = 3.
+  WHEN 'USD'.
+    <gfs_scarr>-dd_handle = 4.
+  WHEN OTHERS.
+    <gfs_scarr>-dd_handle = 5.
+ENDCASE.
+ENDLOOP.

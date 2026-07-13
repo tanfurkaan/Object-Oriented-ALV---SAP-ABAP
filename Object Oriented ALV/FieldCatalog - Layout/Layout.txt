@@ -1,0 +1,22 @@
+Layout için de bir structure datası oluşturmamız lazım.
+DATA: gs_layout type (tipini bul alvden)
+
+Display ALV'ye gidip
+is_layout = gs_layout
+
+Anaprograma gidip PERFORM set_layout oluştur.
+
+FORM'daki set_layout içinde
+
+CLEAR: gs_layout.
+
+
+gs_layout-zebra = (zebra görünütüsü) (abap_true)
+gs_layout-edit = (tüm kolonların editini açıyor) (abap_true)
+gs_layout-cwidth_opt = Tüm kolonların otomatik kolon genişliği (abap_true)
+gs_layout-edit = Tüm kolonların editini açmak
+gs_layout-no_toolbar = Tüm toolbarları yok eder (abap_true)
+gs_layout-grid_title = ALV'ye title ekleme.
+
+
+*LAYOUT TÜM KOLONLARI ETKİLER

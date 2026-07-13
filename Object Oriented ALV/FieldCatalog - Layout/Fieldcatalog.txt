@@ -1,0 +1,34 @@
+FIELDCATALOG kolon bazlı işlemleri alır satır bazlı değil.
+it_fieldcatalog isminde de yazdığı gibi table yapısında.
+Type'ına bakıp bir data oluşturalım. (TYPE'ı methodun içinde yazıyor).
+Fieldcatalogu doldurmak için ona ait structure da oluşturmamız lazım.
+
+DATA: gt_fcat TYPE lvc_t_fcat,
+      gs_fcat TYPE (typeını bul) lvc_s_fcat.
+
+2-) Ana programa gidip sade programlama mantığı ile perform oluştur.
+PERFORM set_fcat.
+
+3-) Forma gidip doldurmaya başla
+
+CLEAR: gs_fcat.
+gs_fcat-fieldname = (Kolon adı)
+APPEND gs_fcat TO gt_fcat.
+
+*Kaç tane kolon göstereceksen hepsi için yaz ayrı ayrı
+*Fieldcatalog oluşturduktan sonra i_structure_name'e ihtiyacımız yok. Onu silip it_fieldcatalog kısmına gt_fcat yazıyoruz. -> Sebebi ise fieldcatalog ile zaten istediğimiz bütün structure yapısını çekip üzerinde oynamaya yapıyoruz.
+
+*Fieldcatalog maddeleri reusealvdekilerle benzer.
+
+FIELDCATALOG MADDELERİ ÖNEMLİ OLANLAR
+gs_fcat-scrtext_(s-m-l) = Kolonun kısa-orta-uzun tanımını
+gs_fcat-col_post = Kolonun sırası.
+gs_fcat-col_opt = Kolon genişliğini en uzun değere göre ayarlar (abap_true)
+gs_fcat-key = Kolonu sarıya boyayıp key alan olduğunu söyler (abap_true)
+gs_fcat-edit = Kolonun editini açmak (abap_true)
+gs_fcat-hotspot = tek tıkla iş yapma özelliği (PAI'den de ayarlamak lazım ReuseALV gibi) (abap_true)
+gs_fcat-no_out = Kolonu ekrandan kaldırma
+gs_fcat-outputlen = Kolon kaç karakter ile gözüksün
+
+gs_fcat-ref_table = hangi tablodan referans alacak kolonu
+gs_fcat-ref_field = hangi kolondan özellikleri referans alacak

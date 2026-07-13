@@ -1,0 +1,49 @@
+1-) Eski yapıyı tek container basabildiğimiz yapıya çekiyoruz yani tek alvli yapıya display_alv'de.
+
+2-) Screen'de diğer container'ı siliyoruz ve CC_ALV2 kalıyor sadece.
+
+3-) Top'a gidip
+
+DATA: go_splitter TYPE REF TO cl_gui_splitter_container.
+
+4-) Bu objeyi display alv'ye gidip.
+
+CREATE OBJECT go_splitter (ctrl+space).
+
+5-) Parent,rows ve columns haricini siliyoruz.
+
+Parent = go_cust (hangi objeyi böleceksek onu veriyoruz)
+Rows = 1 (bu objeyi kaça bölsün, alt alta duran containerlar)
+Columns = 2 (yan yana kaç kolon olsun)
+
+6-) Tekrar Top'a gidiyoruz
+
+go_gui1 TYPE REF TO cl_gui_container.
+
+6-) Geri geliyoruz display_alv'ye ve parçaladığımızın altına
+
+CALL METHOD go_splitter->get_container diyoruz (row column ve container kısmını tutuyoruz sadece)
+row= 1
+column= 1
+
+container = go_gui1
+
+alv basmayı da i_parent = go_gui1
+
+SADECE SOL TARAF GÖZÜKÜYOR ŞİMDİ SAĞ TARAFTAKİNİN DE GÖZÜKMESİ İÇİN
+
+1-) go_gui2 yapacağız ve aynı işlemi gui2 için yapıcaz ama
+
+get_container'da column ikiyi kullan diyoruz ve container = go_gui2 diyoruz.
+
+alv basarkenki methodu da tekrar kopyalıyoruz. 
+  CREATE OBJECT go_alv2
+    EXPORTING
+      i_parent = go_gui1.
+
+    CALL METHOD go_alv2->set_table_for_first_display
+    EXPORTING
+      is_layout       = gs_layout
+    CHANGING
+      it_outtab       = gt_sflight
+      it_fieldcatalog = gt_fcat2.
